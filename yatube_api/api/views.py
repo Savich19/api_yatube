@@ -1,16 +1,10 @@
-from rest_framework import viewsets, permissions
-from api.serializers import (CommentSerializer, PostSerializer,
-                             GroupSerializer, UserSerializer)
+from api.serializers import (CommentSerializer, GroupSerializer,
+                             PostSerializer, UserSerializer)
 from posts.models import Comment, Group, Post, User
+from rest_framework import permissions, viewsets
+
 from .exceptions import PermissionDenied
-
-
-class IsAuthorOrReadOnly(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.author == request.user
+from .permissions import IsAuthorOrReadOnly
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -40,11 +34,10 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthorOrReadOnly, permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get_queryset(self, post_id=None):
         post_id = self.kwargs.get("post_id")
         new_queryset = Comment.objects.filter(post=post_id)
         return new_queryset
