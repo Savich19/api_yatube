@@ -10,6 +10,7 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'slug', 'description')
         read_only_fields = ('slug', 'description',)
 
+
 class CommentSerializer(serializers.ModelSerializer):
 
     author = serializers.SlugRelatedField(
@@ -68,5 +69,5 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id','text', 'author', 'image', 'group', 'pub_date')
+        fields = ('id', 'text', 'author', 'image', 'group', 'pub_date')
         read_only_fields = ('author',)

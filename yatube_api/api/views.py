@@ -1,7 +1,7 @@
 from asyncio import exceptions
 from rest_framework import viewsets, permissions
 from api.serializers import (CommentSerializer, PostSerializer,
-    GroupSerializer, UserSerializer)
+                             GroupSerializer, UserSerializer)
 from posts.models import Comment, Group, Post, User
 
 
