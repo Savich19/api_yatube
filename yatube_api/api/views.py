@@ -1,8 +1,8 @@
-from asyncio import exceptions
 from rest_framework import viewsets, permissions
 from api.serializers import (CommentSerializer, PostSerializer,
                              GroupSerializer, UserSerializer)
 from posts.models import Comment, Group, Post, User
+from .exceptions import PermissionDenied
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
@@ -23,13 +23,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
+            raise PermissionDenied(
                 'Изменение чужого контента запрещено!')
         super(PostViewSet, self).perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
+            raise PermissionDenied(
                 'Удаление чужого контента запрещено!')
         instance.delete()
 
@@ -58,13 +58,13 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
+            raise PermissionDenied(
                 'Изменение чужого контента запрещено!')
         super(CommentViewSet, self).perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
+            raise PermissionDenied(
                 'Удаление чужого контента запрещено!')
         instance.delete()
 
